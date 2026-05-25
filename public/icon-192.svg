@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <rect width="192" height="192" rx="40" fill="#0F6E56"/>
+  <circle cx="96" cy="75" r="38" fill="white" opacity="0.15"/>
+  <ellipse cx="96" cy="80" rx="32" ry="36" fill="white"/>
+  <ellipse cx="96" cy="68" rx="20" ry="12" fill="#0F6E56" opacity="0.15"/>
+  <rect x="60" y="112" width="72" height="10" rx="5" fill="white" opacity="0.9"/>
+  <text x="96" y="148" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="white">दूध</text>
+  <text x="96" y="168" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#A7F3D0">खाता</text>
+</svg>
