@@ -23,5 +23,3 @@ npm-debug.log*
 .cache
 *.local
 
-# Project-specific
-claude.md
