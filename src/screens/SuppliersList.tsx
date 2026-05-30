@@ -37,22 +37,22 @@ export function SuppliersList() {
     .filter(s => s.name.toLowerCase().includes(search.toLowerCase()));
 
   return (
-    <div className="pb-20 bg-gray-50 min-h-screen">
+    <div className="pb-20 bg-gray-50 dark:bg-gray-900 min-h-screen">
       {/* Header */}
-      <div className="bg-green-700 pt-12 pb-4 px-4">
+      <div className="bg-green-700 dark:bg-green-900 pt-12 pb-4 px-4">
         <h1 className="text-white text-2xl font-bold">{t('suppliers')}</h1>
       </div>
 
       {/* Search */}
-      <div className="px-4 py-3 bg-white border-b border-gray-100">
-        <div className="flex items-center gap-2 bg-gray-100 rounded-xl px-3 py-2">
+      <div className="px-4 py-3 bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+        <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-700 rounded-xl px-3 py-2.5">
           <Search size={18} className="text-gray-400 shrink-0" />
           <input
             type="text"
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder={t('searchSupplier')}
-            className="flex-1 bg-transparent text-base text-gray-800 placeholder-gray-400 focus:outline-none"
+            className="flex-1 bg-transparent text-base text-gray-800 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none"
           />
         </div>
       </div>
@@ -60,7 +60,7 @@ export function SuppliersList() {
       {/* List */}
       <div className="px-4 py-3 space-y-2">
         {filtered.length === 0 ? (
-          <div className="text-center py-16 text-gray-400">
+          <div className="text-center py-16 text-gray-400 dark:text-gray-500">
             <Truck size={48} className="mx-auto mb-3 opacity-50" />
             <p className="text-lg">{t('noEntries')}</p>
           </div>
@@ -69,22 +69,22 @@ export function SuppliersList() {
             <button
               key={supplier.id}
               onClick={() => navigate(`/suppliers/${supplier.id}`)}
-              className="w-full bg-white rounded-2xl px-4 py-4 flex items-center gap-3 shadow-sm active:bg-gray-50 text-left"
+              className="w-full bg-white dark:bg-gray-800 rounded-2xl px-4 py-4 flex items-center gap-3 shadow-sm active:bg-gray-50 dark:active:bg-gray-700 text-left"
             >
-              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center shrink-0">
-                <span className="text-blue-700 font-bold text-lg">
+              <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center shrink-0">
+                <span className="text-blue-700 dark:text-blue-400 font-bold text-lg">
                   {supplier.name.charAt(0).toUpperCase()}
                 </span>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-gray-800 font-semibold text-base truncate">{supplier.name}</p>
+                <p className="text-gray-800 dark:text-white font-semibold text-base truncate">{supplier.name}</p>
                 {supplier.phone && (
-                  <p className="text-gray-400 text-sm">{supplier.phone}</p>
+                  <p className="text-gray-400 dark:text-gray-500 text-sm">{supplier.phone}</p>
                 )}
               </div>
               <div className="flex items-center gap-2 shrink-0">
                 <BalanceBadge balance={balances[supplier.id] ?? 0} />
-                <ChevronRight size={18} className="text-gray-300" />
+                <ChevronRight size={18} className="text-gray-300 dark:text-gray-600" />
               </div>
             </button>
           ))
@@ -146,49 +146,49 @@ function AddSupplierForm({ defaultRate, onSave, onCancel }: AddSupplierFormProps
   return (
     <div className="space-y-4">
       <div>
-        <label className="block text-base font-medium text-gray-700 mb-1">{t('supplierName')}</label>
+        <label className="block text-base font-semibold text-gray-700 dark:text-gray-200 mb-1.5">{t('supplierName')}</label>
         <input
           type="text"
           value={name}
           onChange={e => setName(e.target.value)}
           placeholder={t('supplierName')}
           autoFocus
-          className="w-full border border-gray-300 rounded-xl px-3 py-3 text-base focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-xl px-3 py-3.5 text-base focus:outline-none focus:ring-2 focus:ring-green-500"
         />
       </div>
       <div>
-        <label className="block text-base font-medium text-gray-700 mb-1">
-          {t('phone')} <span className="text-gray-400 text-sm">({t('optional')})</span>
+        <label className="block text-base font-semibold text-gray-700 dark:text-gray-200 mb-1.5">
+          {t('phone')} <span className="text-gray-400 text-sm font-normal">({t('optional')})</span>
         </label>
         <input
           type="tel"
           value={phone}
           onChange={e => setPhone(e.target.value)}
           placeholder="9876543210"
-          className="w-full border border-gray-300 rounded-xl px-3 py-3 text-base focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-xl px-3 py-3.5 text-base focus:outline-none focus:ring-2 focus:ring-green-500"
         />
       </div>
       <div>
-        <label className="block text-base font-medium text-gray-700 mb-1">{t('defaultRate')} (₹/L)</label>
+        <label className="block text-base font-semibold text-gray-700 dark:text-gray-200 mb-1.5">{t('defaultRate')} (₹/L)</label>
         <input
           type="number"
           inputMode="decimal"
           value={rate}
           onChange={e => setRate(e.target.value)}
-          className="w-full border border-gray-300 rounded-xl px-3 py-3 text-base focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-xl px-3 py-3.5 text-base focus:outline-none focus:ring-2 focus:ring-green-500"
         />
       </div>
       <div className="flex gap-3 pt-2">
         <button
           onClick={onCancel}
-          className="flex-1 py-4 rounded-xl border border-gray-300 text-gray-700 text-base font-semibold active:bg-gray-50"
+          className="flex-1 py-4 rounded-xl border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 text-base font-semibold"
         >
           {t('cancel')}
         </button>
         <button
           onClick={handleSave}
           disabled={!name.trim() || saving}
-          className="flex-1 py-4 rounded-xl bg-green-700 text-white text-base font-semibold active:bg-green-800 disabled:opacity-60"
+          className="flex-1 py-4 rounded-xl bg-green-700 text-white text-base font-bold disabled:opacity-60"
         >
           {saving ? '...' : t('save')}
         </button>
