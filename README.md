@@ -5,12 +5,16 @@ A simple offline-first Progressive Web App (PWA) for small milk sellers to manag
 ## Features
 
 - **Offline First** — works fully without internet after first load
-- **Hindi & English** — complete bilingual support
+- **Hindi & English** — complete bilingual support (Devanagari Hindi)
 - **Customers** — track milk deliveries and payments for each customer
 - **Suppliers** — track milk purchases and payments to suppliers
 - **Auto Balance** — running balance calculated automatically
+- **Home Dashboard** — live summary with recent activity, search, and date filters
 - **Quick Entry** — fast single-customer delivery entry
 - **Batch Entry** — add deliveries for all customers at once
+- **WhatsApp Messaging** — send balance reminders to customers via WhatsApp
+- **Bulk WhatsApp Send** — list view with auto-advance after sending each message
+- **Dark / Light / System Theme** — theme switcher in settings
 - **Data Backup** — export and import all data as JSON
 - **Installable** — can be installed on Android home screen like a native app
 
