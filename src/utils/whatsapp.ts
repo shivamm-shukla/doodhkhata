@@ -39,23 +39,21 @@ export function buildDeliveryMessage(params: {
   const { lang, customerName, date, litres, rate, amount, balance } = params;
   const d = fmtDate(date, lang);
 
-  let balLine: string;
-  if (balance === 0) {
-    balLine = lang === 'hi' ? 'Hisaab poora ho gaya hai ✅' : 'Account is fully settled ✅';
-  } else if (balance < 0) {
-    balLine = lang === 'hi'
-      ? `Advance mein ₹${fmt(Math.abs(balance))} hai ✅`
-      : `Advance balance: ₹${fmt(Math.abs(balance))} ✅`;
-  } else {
-    balLine = lang === 'hi'
-      ? `Kul baaki: ₹${fmt(balance)}`
-      : `Total due: ₹${fmt(balance)}`;
+  if (lang === 'hi') {
+    let balLine: string;
+    if (balance === 0)       balLine = 'हिसाब पूरा हो गया है ✅';
+    else if (balance < 0)   balLine = `Advance में ₹${fmt(Math.abs(balance))} है ✅`;
+    else                     balLine = `कुल बाकी: ₹${fmt(balance)}`;
+
+    return `नमस्ते ${customerName} जी,\n\n${d} को ${litres} लीटर दूध दिया।\nबिल: ₹${fmt(amount)} (₹${fmt(rate)}/लीटर)\n\n${balLine}\n\n- दूधखाता`;
   }
 
-  if (lang === 'hi') {
-    return `Namaste ${customerName} ji 🙏\n\n${d} ko ${litres} litre doodh diya.\nBill: ₹${fmt(amount)} (₹${fmt(rate)}/litre)\n\n${balLine}\n\nDoodhKhata`;
-  }
-  return `Hello ${customerName} 🙏\n\n${litres} litres delivered on ${d}.\nBill: ₹${fmt(amount)} (₹${fmt(rate)}/litre)\n\n${balLine}\n\nDoodhKhata`;
+  let balLine: string;
+  if (balance === 0)       balLine = 'Account fully settled ✅';
+  else if (balance < 0)   balLine = `Advance balance: ₹${fmt(Math.abs(balance))} ✅`;
+  else                     balLine = `Total due: ₹${fmt(balance)}`;
+
+  return `Hello ${customerName},\n\n${litres} litres delivered on ${d}.\nBill: ₹${fmt(amount)} (₹${fmt(rate)}/litre)\n\n${balLine}\n\n- DoodhKhata`;
 }
 
 export function buildPaymentMessage(params: {
@@ -66,23 +64,21 @@ export function buildPaymentMessage(params: {
 }): string {
   const { lang, customerName, paymentAmount, balance } = params;
 
-  let balLine: string;
-  if (balance === 0) {
-    balLine = lang === 'hi' ? 'Ab hisaab bilkul barabar hai ✅' : 'Account is now fully clear ✅';
-  } else if (balance < 0) {
-    balLine = lang === 'hi'
-      ? `Advance mein ₹${fmt(Math.abs(balance))} hai ✅`
-      : `Advance balance: ₹${fmt(Math.abs(balance))} ✅`;
-  } else {
-    balLine = lang === 'hi'
-      ? `Abhi bhi baaki hai: ₹${fmt(balance)}`
-      : `Remaining due: ₹${fmt(balance)}`;
+  if (lang === 'hi') {
+    let balLine: string;
+    if (balance === 0)       balLine = 'अब हिसाब बिल्कुल बराबर है ✅';
+    else if (balance < 0)   balLine = `Advance में ₹${fmt(Math.abs(balance))} है ✅`;
+    else                     balLine = `अभी भी बाकी है: ₹${fmt(balance)}`;
+
+    return `नमस्ते ${customerName} जी,\n\n₹${fmt(paymentAmount)} का भुगतान मिल गया। शुक्रिया!\n\n${balLine}\n\n- दूधखाता`;
   }
 
-  if (lang === 'hi') {
-    return `Namaste ${customerName} ji 🙏\n\n₹${fmt(paymentAmount)} ka bhugtan mil gaya. Shukriya!\n\n${balLine}\n\nDoodhKhata`;
-  }
-  return `Hello ${customerName} 🙏\n\nPayment of ₹${fmt(paymentAmount)} received. Thank you!\n\n${balLine}\n\nDoodhKhata`;
+  let balLine: string;
+  if (balance === 0)       balLine = 'Account is now fully clear ✅';
+  else if (balance < 0)   balLine = `Advance balance: ₹${fmt(Math.abs(balance))} ✅`;
+  else                     balLine = `Remaining due: ₹${fmt(balance)}`;
+
+  return `Hello ${customerName},\n\nPayment of ₹${fmt(paymentAmount)} received. Thank you!\n\n${balLine}\n\n- DoodhKhata`;
 }
 
 export function buildMonthlyMessage(params: {
@@ -98,35 +94,31 @@ export function buildMonthlyMessage(params: {
 }): string {
   const { lang, customerName, month, year, entries, totalLitres, totalBilled, totalPaid, balance } = params;
   const monthName = getMonthName(month, lang);
-
-  let balLine: string;
-  if (balance === 0) {
-    balLine = lang === 'hi' ? 'Hisaab poora ho gaya hai ✅' : 'Account is fully settled ✅';
-  } else if (balance < 0) {
-    balLine = lang === 'hi'
-      ? `Advance mein ₹${fmt(Math.abs(balance))} hai ✅`
-      : `Advance balance: ₹${fmt(Math.abs(balance))} ✅`;
-  } else {
-    balLine = lang === 'hi'
-      ? `Kul baaki: ₹${fmt(balance)}`
-      : `Total due: ₹${fmt(balance)}`;
-  }
-
   const sorted = entries.slice().sort((a, b) => a.date.localeCompare(b.date));
 
   if (lang === 'hi') {
+    let balLine: string;
+    if (balance === 0)       balLine = 'हिसाब पूरा हो गया है ✅';
+    else if (balance < 0)   balLine = `Advance में ₹${fmt(Math.abs(balance))} है ✅`;
+    else                     balLine = `कुल बाकी: ₹${fmt(balance)}`;
+
     const rows = sorted.map(e => {
       const day = new Date(e.date + 'T00:00:00').getDate();
-      return `${day} tarikh - ${e.litres} litre - ₹${fmt(e.amount)}`;
+      return `${day} तारीख - ${e.litres} लीटर - ₹${fmt(e.amount)}`;
     }).join('\n');
 
-    return `Namaste ${customerName} ji 🙏\n\n${monthName} ${year} ka hisaab:\n\n${rows}\n\nMahine mein kul ${fmt(totalLitres)} litre doodh diya.\nKul bill: ₹${fmt(totalBilled)}\nAapne diye: ₹${fmt(totalPaid)}\n${balLine}\n\nDoodhKhata`;
+    return `नमस्ते ${customerName} जी,\n\n${monthName} ${year} का हिसाब:\n\n${rows}\n\nमहीने में कुल ${fmt(totalLitres)} लीटर दूध दिया।\nकुल बिल: ₹${fmt(totalBilled)}\nआपने दिया: ₹${fmt(totalPaid)}\n${balLine}\n\n- दूधखाता`;
   }
+
+  let balLine: string;
+  if (balance === 0)       balLine = 'Account fully settled ✅';
+  else if (balance < 0)   balLine = `Advance balance: ₹${fmt(Math.abs(balance))} ✅`;
+  else                     balLine = `Total due: ₹${fmt(balance)}`;
 
   const rows = sorted.map(e => {
     const day = new Date(e.date + 'T00:00:00').getDate();
     return `${day}th - ${e.litres} litres - ₹${fmt(e.amount)}`;
   }).join('\n');
 
-  return `Hello ${customerName} 🙏\n\n${monthName} ${year} Statement:\n\n${rows}\n\nTotal ${fmt(totalLitres)} litres delivered this month.\nTotal bill: ₹${fmt(totalBilled)}\nPaid: ₹${fmt(totalPaid)}\n${balLine}\n\nDoodhKhata`;
+  return `Hello ${customerName},\n\n${monthName} ${year} Statement:\n\n${rows}\n\nTotal ${fmt(totalLitres)} litres delivered this month.\nTotal bill: ₹${fmt(totalBilled)}\nPaid: ₹${fmt(totalPaid)}\n${balLine}\n\n- DoodhKhata`;
 }
