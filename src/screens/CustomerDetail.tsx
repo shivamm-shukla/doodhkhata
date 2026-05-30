@@ -6,9 +6,12 @@ import { useApp } from '../context/AppContext';
 import { useData } from '../context/DataContext';
 import { useCustomerBalance } from '../hooks/useCustomers';
 import { BottomSheet } from '../components/BottomSheet';
+import { WhatsAppPrompt } from '../components/WhatsAppPrompt';
 import { formatCurrency, formatLitres, formatDate } from '../utils/format';
 import { todayString } from '../utils/format';
+import { calculateCustomerBalance } from '../db/queries';
 import { DeliveryEntry, PaymentEntry } from '../db/index';
+import { buildDeliveryMessage, buildPaymentMessage } from '../utils/whatsapp';
 
 export function CustomerDetail() {
   const { id } = useParams<{ id: string }>();
@@ -23,6 +26,7 @@ export function CustomerDetail() {
   const [showEditSheet, setShowEditSheet] = useState(false);
   const [showDeleteCustomer, setShowDeleteCustomer] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<{ type: 'delivery' | 'payment'; id: string } | null>(null);
+  const [whatsAppMessage, setWhatsAppMessage] = useState<string | null>(null);
 
   const customer = state.customers.find(c => c.id === id);
   const deliveries = (id ? state.customerDeliveries[id] : []) ?? [];
@@ -179,6 +183,16 @@ export function CustomerDetail() {
             await createDeliveryEntry({ type: 'customer', partyId: customer.id, date, litres, rate, note });
             showToast(t('savedSuccessfully'));
             setShowDeliverySheet(false);
+            const newBalance = await calculateCustomerBalance(customer.id);
+            setWhatsAppMessage(buildDeliveryMessage({
+              lang,
+              customerName: customer.name,
+              date,
+              litres,
+              rate,
+              amount: litres * rate,
+              balance: newBalance,
+            }));
           }}
           onCancel={() => setShowDeliverySheet(false)}
         />
@@ -192,10 +206,26 @@ export function CustomerDetail() {
             await createPaymentEntry({ type: 'customer', partyId: customer.id, date, amount, note });
             showToast(t('savedSuccessfully'));
             setShowPaymentSheet(false);
+            const newBalance = await calculateCustomerBalance(customer.id);
+            setWhatsAppMessage(buildPaymentMessage({
+              lang,
+              customerName: customer.name,
+              paymentAmount: amount,
+              balance: newBalance,
+            }));
           }}
           onCancel={() => setShowPaymentSheet(false)}
         />
       </BottomSheet>
+
+      {/* WhatsApp Prompt */}
+      <WhatsAppPrompt
+        isOpen={whatsAppMessage !== null}
+        onClose={() => setWhatsAppMessage(null)}
+        customerName={customer.name}
+        phone={customer.phone}
+        message={whatsAppMessage ?? ''}
+      />
 
       {/* Delete Entry Confirm */}
       {deleteConfirm && (
@@ -480,9 +510,12 @@ function EditCustomerForm({
           className="w-full border border-gray-300 rounded-xl px-3 py-3 text-base focus:outline-none focus:ring-2 focus:ring-green-500" />
       </div>
       <div>
-        <label className="block text-base font-medium text-gray-700 mb-1">{t('phone')} <span className="text-gray-400 text-sm">({t('optional')})</span></label>
-        <input type="tel" value={phone} onChange={e => setPhone(e.target.value)} placeholder="9876543210"
+        <label className="block text-base font-medium text-gray-700 mb-1">{t('whatsappPhoneLabel')} <span className="text-gray-400 text-sm">({t('optional')})</span></label>
+        <input type="tel" inputMode="numeric" value={phone}
+          onChange={e => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
+          placeholder="10 digit number"
           className="w-full border border-gray-300 rounded-xl px-3 py-3 text-base focus:outline-none focus:ring-2 focus:ring-green-500" />
+        <p className="text-xs text-gray-400 mt-1">{t('whatsappPhoneHelper')}</p>
       </div>
       <div>
         <label className="block text-base font-medium text-gray-700 mb-1">{t('defaultRate')} (₹/L)</label>

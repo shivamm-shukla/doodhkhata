@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Zap, LayoutList, Droplets, ShoppingCart, TrendingUp, TrendingDown, User, Package, ArrowRight } from 'lucide-react';
+import { Zap, LayoutList, Droplets, ShoppingCart, TrendingUp, TrendingDown, User, Package, ArrowRight, MessageCircle } from 'lucide-react';
 import { useLanguage } from '../hooks/useLanguage';
 import { useTotalBalances } from '../hooks/useBalance';
 import { StatCard } from '../components/StatCard';
@@ -10,7 +10,7 @@ import { BottomSheet } from '../components/BottomSheet';
 import { QuickEntry } from './QuickEntry';
 
 export function Home() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const navigate = useNavigate();
   const { totalReceivable, totalPayable, refresh } = useTotalBalances();
   const [todaySold, setTodaySold] = useState(0);
@@ -91,6 +91,20 @@ export function Home() {
             <span className="text-lg font-bold">{t('batchEntry')}</span>
           </button>
         </div>
+
+        {/* WhatsApp Bulk Button */}
+        <button
+          onClick={() => navigate('/whatsapp-bulk')}
+          className="w-full bg-[#25D366] text-white rounded-2xl p-4 flex items-center gap-3 active:scale-95 transition-transform shadow-sm"
+        >
+          <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center shrink-0">
+            <MessageCircle size={22} />
+          </div>
+          <div className="text-left">
+            <p className="text-base font-bold">{t('whatsappMonthlyBtn')}</p>
+            <p className="text-xs opacity-80">📲 {lang === 'hi' ? 'सबको एक साथ भेजो' : 'Send to all at once'}</p>
+          </div>
+        </button>
 
         {/* Recent Activity */}
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden">

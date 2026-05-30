@@ -248,6 +248,31 @@ export async function getRecentActivities(limit = 10): Promise<ActivityItem[]> {
     .slice(0, limit);
 }
 
+// ─── Monthly Customer Data ────────────────────────────────────
+export async function getCustomerMonthlyData(customerId: string, year: number, month: number) {
+  const prefix = `${year}-${String(month).padStart(2, '0')}`;
+  const [deliveries, payments] = await Promise.all([
+    getDeliveriesForParty(customerId),
+    getPaymentsForParty(customerId),
+  ]);
+
+  const allDeliveries = deliveries.filter(d => d.type === 'customer');
+  const allPayments = payments.filter(p => p.type === 'customer');
+
+  const monthDeliveries = allDeliveries.filter(d => d.date.startsWith(prefix));
+  const monthPayments = allPayments.filter(p => p.date.startsWith(prefix));
+
+  const totalBilledAllTime = allDeliveries.reduce((s, d) => s + d.amount, 0);
+  const totalPaidAllTime = allPayments.reduce((s, p) => s + p.amount, 0);
+  const balance = totalBilledAllTime - totalPaidAllTime;
+
+  const monthTotalLitres = monthDeliveries.reduce((s, d) => s + d.litres, 0);
+  const monthTotalBilled = monthDeliveries.reduce((s, d) => s + d.amount, 0);
+  const monthTotalPaid = monthPayments.reduce((s, p) => s + p.amount, 0);
+
+  return { monthDeliveries, monthPayments, balance, monthTotalLitres, monthTotalBilled, monthTotalPaid };
+}
+
 // ─── Export / Import ──────────────────────────────────────────
 export async function exportData() {
   const db = await getDB();

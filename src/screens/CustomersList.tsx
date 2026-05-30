@@ -160,15 +160,17 @@ function AddCustomerForm({ defaultRate, onSave, onCancel }: AddCustomerFormProps
       </div>
       <div>
         <label className="block text-base font-medium text-gray-700 mb-1">
-          {t('phone')} <span className="text-gray-400 text-sm">({t('optional')})</span>
+          {t('whatsappPhoneLabel')} <span className="text-gray-400 text-sm">({t('optional')})</span>
         </label>
         <input
           type="tel"
+          inputMode="numeric"
           value={phone}
-          onChange={e => setPhone(e.target.value)}
-          placeholder="9876543210"
+          onChange={e => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
+          placeholder="10 digit number"
           className="w-full border border-gray-300 rounded-xl px-3 py-3 text-base focus:outline-none focus:ring-2 focus:ring-green-500"
         />
+        <p className="text-xs text-gray-400 mt-1">{t('whatsappPhoneHelper')}</p>
       </div>
       <div>
         <label className="block text-base font-medium text-gray-700 mb-1">{t('defaultRate')} (₹/L)</label>

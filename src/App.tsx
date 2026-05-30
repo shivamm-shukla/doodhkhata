@@ -14,6 +14,7 @@ import { SuppliersList } from './screens/SuppliersList';
 import { SupplierDetail } from './screens/SupplierDetail';
 import { BatchEntry } from './screens/BatchEntry';
 import { Settings } from './screens/Settings';
+import { WhatsAppBulk } from './screens/WhatsAppBulk';
 
 function AppRoutes() {
   const { state } = useApp();
@@ -45,6 +46,7 @@ function AppRoutes() {
         <Route path="/suppliers/:id" element={<SupplierDetail />} />
         <Route path="/batch-entry" element={<BatchEntry />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/whatsapp-bulk" element={<WhatsAppBulk />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <BottomNav />

@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../hooks/useLanguage';
 import { useApp } from '../context/AppContext';
 import { useData } from '../context/DataContext';
-import { getAllCustomers, getAllSuppliers } from '../db/queries';
+import { getAllCustomers, getAllSuppliers, calculateCustomerBalance } from '../db/queries';
 import { Customer, Supplier } from '../db/index';
 import { todayString } from '../utils/format';
+import { WhatsAppPrompt } from '../components/WhatsAppPrompt';
+import { buildDeliveryMessage, buildPaymentMessage } from '../utils/whatsapp';
 
 interface QuickEntryProps {
   onClose: () => void;
@@ -12,7 +14,7 @@ interface QuickEntryProps {
 }
 
 export function QuickEntry({ onClose, defaultPartyType = 'customer' }: QuickEntryProps) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const { state: appState, showToast } = useApp();
   const { createDeliveryEntry, createPaymentEntry } = useData();
 
@@ -27,6 +29,7 @@ export function QuickEntry({ onClose, defaultPartyType = 'customer' }: QuickEntr
   const [date, setDate] = useState(todayString());
   const [note, setNote] = useState('');
   const [saving, setSaving] = useState(false);
+  const [whatsAppData, setWhatsAppData] = useState<{ message: string; phone?: string; name: string } | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -93,6 +96,19 @@ export function QuickEntry({ onClose, defaultPartyType = 'customer' }: QuickEntr
         });
       }
       showToast(t('savedSuccessfully'));
+
+      if (partyType === 'customer') {
+        const customer = customers.find(c => c.id === selectedPartyId);
+        if (customer) {
+          const balance = await calculateCustomerBalance(selectedPartyId);
+          const msg = entryType === 'delivery'
+            ? buildDeliveryMessage({ lang, customerName: customer.name, date, litres: parseFloat(litres), rate: parseFloat(rate), amount: parseFloat(litres) * parseFloat(rate), balance })
+            : buildPaymentMessage({ lang, customerName: customer.name, paymentAmount: parseFloat(amount), balance });
+          setWhatsAppData({ message: msg, phone: customer.phone, name: customer.name });
+          setSaving(false);
+          return;
+        }
+      }
       onClose();
     } catch (err) {
       showToast(t('errorOccurred'), 'error');
@@ -100,6 +116,18 @@ export function QuickEntry({ onClose, defaultPartyType = 'customer' }: QuickEntr
       setSaving(false);
     }
   };
+
+  if (whatsAppData) {
+    return (
+      <WhatsAppPrompt
+        isOpen={true}
+        onClose={() => { setWhatsAppData(null); onClose(); }}
+        customerName={whatsAppData.name}
+        phone={whatsAppData.phone}
+        message={whatsAppData.message}
+      />
+    );
+  }
 
   return (
     <div className="space-y-4">
