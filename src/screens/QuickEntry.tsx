@@ -132,11 +132,11 @@ export function QuickEntry({ onClose, defaultPartyType = 'customer' }: QuickEntr
   return (
     <div className="space-y-4">
       {/* Party Type Toggle */}
-      <div className="flex rounded-xl overflow-hidden border border-gray-200">
+      <div className="flex rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700">
         <button
           onClick={() => setPartyType('customer')}
           className={`flex-1 py-3 text-base font-semibold transition-colors ${
-            partyType === 'customer' ? 'bg-green-700 text-white' : 'bg-white text-gray-600'
+            partyType === 'customer' ? 'bg-green-700 text-white' : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300'
           }`}
         >
           {t('customers')}
@@ -144,7 +144,7 @@ export function QuickEntry({ onClose, defaultPartyType = 'customer' }: QuickEntr
         <button
           onClick={() => setPartyType('supplier')}
           className={`flex-1 py-3 text-base font-semibold transition-colors ${
-            partyType === 'supplier' ? 'bg-green-700 text-white' : 'bg-white text-gray-600'
+            partyType === 'supplier' ? 'bg-green-700 text-white' : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300'
           }`}
         >
           {t('suppliers')}
@@ -152,11 +152,11 @@ export function QuickEntry({ onClose, defaultPartyType = 'customer' }: QuickEntr
       </div>
 
       {/* Entry Type Toggle */}
-      <div className="flex rounded-xl overflow-hidden border border-gray-200">
+      <div className="flex rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700">
         <button
           onClick={() => setEntryType('delivery')}
           className={`flex-1 py-3 text-base font-semibold transition-colors ${
-            entryType === 'delivery' ? 'bg-blue-600 text-white' : 'bg-white text-gray-600'
+            entryType === 'delivery' ? 'bg-blue-600 text-white' : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300'
           }`}
         >
           {t('deliveryEntry')}
@@ -164,7 +164,7 @@ export function QuickEntry({ onClose, defaultPartyType = 'customer' }: QuickEntr
         <button
           onClick={() => setEntryType('payment')}
           className={`flex-1 py-3 text-base font-semibold transition-colors ${
-            entryType === 'payment' ? 'bg-blue-600 text-white' : 'bg-white text-gray-600'
+            entryType === 'payment' ? 'bg-blue-600 text-white' : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300'
           }`}
         >
           {t('paymentEntry')}
@@ -173,13 +173,13 @@ export function QuickEntry({ onClose, defaultPartyType = 'customer' }: QuickEntr
 
       {/* Party Select */}
       <div>
-        <label className="block text-base font-medium text-gray-700 mb-1">
+        <label className="block text-base font-medium text-gray-700 dark:text-gray-200 mb-1">
           {partyType === 'customer' ? t('selectCustomer') : t('selectSupplier')}
         </label>
         <select
           value={selectedPartyId}
           onChange={e => setSelectedPartyId(e.target.value)}
-          className="w-full border border-gray-300 rounded-xl px-3 py-3 text-base bg-white focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-xl px-3 py-3 text-base bg-white focus:outline-none focus:ring-2 focus:ring-green-500"
         >
           <option value="">-- {partyType === 'customer' ? t('selectCustomer') : t('selectSupplier')} --</option>
           {parties.map(p => (
@@ -193,31 +193,31 @@ export function QuickEntry({ onClose, defaultPartyType = 'customer' }: QuickEntr
         <>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-base font-medium text-gray-700 mb-1">{t('litres')}</label>
+              <label className="block text-base font-medium text-gray-700 dark:text-gray-200 mb-1">{t('litres')}</label>
               <input
                 type="number"
                 inputMode="decimal"
                 value={litres}
                 onChange={e => setLitres(e.target.value)}
                 placeholder="0"
-                className="w-full border border-gray-300 rounded-xl px-3 py-3 text-base focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-xl px-3 py-3 text-base focus:outline-none focus:ring-2 focus:ring-green-500"
               />
             </div>
             <div>
-              <label className="block text-base font-medium text-gray-700 mb-1">{t('rate')}</label>
+              <label className="block text-base font-medium text-gray-700 dark:text-gray-200 mb-1">{t('rate')}</label>
               <input
                 type="number"
                 inputMode="decimal"
                 value={rate}
                 onChange={e => setRate(e.target.value)}
                 placeholder="0"
-                className="w-full border border-gray-300 rounded-xl px-3 py-3 text-base focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-xl px-3 py-3 text-base focus:outline-none focus:ring-2 focus:ring-green-500"
               />
             </div>
           </div>
           <div>
-            <label className="block text-base font-medium text-gray-700 mb-1">{t('amount')}</label>
-            <div className="w-full border border-gray-200 rounded-xl px-3 py-3 text-base bg-gray-50 text-gray-700 font-semibold">
+            <label className="block text-base font-medium text-gray-700 dark:text-gray-200 mb-1">{t('amount')}</label>
+            <div className="w-full border border-gray-200 dark:border-gray-600 rounded-xl px-3 py-3 text-base bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-semibold">
               ₹{amount || '0'}
             </div>
           </div>
@@ -227,32 +227,32 @@ export function QuickEntry({ onClose, defaultPartyType = 'customer' }: QuickEntr
       {/* Payment Fields */}
       {entryType === 'payment' && (
         <div>
-          <label className="block text-base font-medium text-gray-700 mb-1">{t('amount')}</label>
+          <label className="block text-base font-medium text-gray-700 dark:text-gray-200 mb-1">{t('amount')}</label>
           <input
             type="number"
             inputMode="decimal"
             value={amount}
             onChange={e => setAmount(e.target.value)}
             placeholder="0"
-            className="w-full border border-gray-300 rounded-xl px-3 py-3 text-base focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-xl px-3 py-3 text-base focus:outline-none focus:ring-2 focus:ring-green-500"
           />
         </div>
       )}
 
       {/* Date */}
       <div>
-        <label className="block text-base font-medium text-gray-700 mb-1">{t('date')}</label>
+        <label className="block text-base font-medium text-gray-700 dark:text-gray-200 mb-1">{t('date')}</label>
         <input
           type="date"
           value={date}
           onChange={e => setDate(e.target.value)}
-          className="w-full border border-gray-300 rounded-xl px-3 py-3 text-base focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-xl px-3 py-3 text-base focus:outline-none focus:ring-2 focus:ring-green-500"
         />
       </div>
 
       {/* Note */}
       <div>
-        <label className="block text-base font-medium text-gray-700 mb-1">
+        <label className="block text-base font-medium text-gray-700 dark:text-gray-200 mb-1">
           {t('note')} <span className="text-gray-400 text-sm">({t('optional')})</span>
         </label>
         <input
@@ -260,7 +260,7 @@ export function QuickEntry({ onClose, defaultPartyType = 'customer' }: QuickEntr
           value={note}
           onChange={e => setNote(e.target.value)}
           placeholder={t('note')}
-          className="w-full border border-gray-300 rounded-xl px-3 py-3 text-base focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-xl px-3 py-3 text-base focus:outline-none focus:ring-2 focus:ring-green-500"
         />
       </div>
 
@@ -268,7 +268,7 @@ export function QuickEntry({ onClose, defaultPartyType = 'customer' }: QuickEntr
       <div className="flex gap-3 pt-2">
         <button
           onClick={onClose}
-          className="flex-1 py-4 rounded-xl border border-gray-300 text-gray-700 text-base font-semibold active:bg-gray-50"
+          className="flex-1 py-4 rounded-xl border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 text-base font-semibold active:bg-gray-50"
         >
           {t('cancel')}
         </button>

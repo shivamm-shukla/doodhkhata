@@ -16,15 +16,21 @@ export function openWhatsApp(phone: string, message: string): void {
   window.open(buildWhatsAppUrl(phone, message), '_blank');
 }
 
-function formatMsgDate(dateStr: string): string {
-  const d = new Date(dateStr + 'T00:00:00');
-  return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+function fmt(n: number): string {
+  return Number.isInteger(n) ? String(n) : n.toFixed(2).replace(/\.?0+$/, '');
 }
 
 function balanceLine(balance: number, lang: Language): string {
-  if (balance === 0) return lang === 'hi' ? '✅ Hisaab barabar hai' : '✅ All settled!';
-  if (balance < 0) return `✅ Advance: ₹${Math.abs(balance).toFixed(2)}`;
-  return lang === 'hi' ? `❗ Kul baaki: ₹${balance.toFixed(2)}` : `❗ Total due: ₹${balance.toFixed(2)}`;
+  if (balance === 0) return lang === 'hi' ? '✅ Hisaab barabar hai!' : '✅ All settled!';
+  if (balance < 0) return lang === 'hi' ? `✅ Advance baaki hai: ₹${fmt(Math.abs(balance))}` : `✅ Advance balance: ₹${fmt(Math.abs(balance))}`;
+  return lang === 'hi' ? `❗ Baaki hai: ₹${fmt(balance)}` : `❗ Amount due: ₹${fmt(balance)}`;
+}
+
+function fmtDate(dateStr: string, lang: Language): string {
+  const d = new Date(dateStr + 'T00:00:00');
+  const day = d.getDate();
+  const month = getMonthName(d.getMonth() + 1, lang);
+  return lang === 'hi' ? `${day} ${month}` : `${day} ${month}`;
 }
 
 export function buildDeliveryMessage(params: {
@@ -37,12 +43,13 @@ export function buildDeliveryMessage(params: {
   balance: number;
 }): string {
   const { lang, customerName, date, litres, rate, amount, balance } = params;
-  const d = formatMsgDate(date);
+  const d = fmtDate(date, lang);
   const bal = balanceLine(balance, lang);
+
   if (lang === 'hi') {
-    return `Namaste ${customerName} ji! 🙏\n\nAaj ki delivery:\n📅 ${d}\n🥛 ${litres} litre @ ₹${rate}\n💰 Aaj ka: ₹${amount.toFixed(2)}\n${bal}\n\nDoodhKhata`;
+    return `Namaste ${customerName} ji! 🙏\n\n📅 ${d} ko ${litres} litre doodh diya\n💵 Rate ₹${fmt(rate)}/L  ·  Bill ₹${fmt(amount)}\n\n${bal}\n\n— DoodhKhata 🥛`;
   }
-  return `Hello ${customerName}!\n\nToday's delivery:\n📅 ${d}\n🥛 ${litres} litres @ ₹${rate}\n💰 Today's amount: ₹${amount.toFixed(2)}\n${bal}\n\nDoodhKhata`;
+  return `Hello ${customerName}! 🙏\n\n📅 ${d} — ${litres} litres delivered\n💵 Rate ₹${fmt(rate)}/L  ·  Bill ₹${fmt(amount)}\n\n${bal}\n\n— DoodhKhata 🥛`;
 }
 
 export function buildPaymentMessage(params: {
@@ -53,10 +60,11 @@ export function buildPaymentMessage(params: {
 }): string {
   const { lang, customerName, paymentAmount, balance } = params;
   const bal = balanceLine(balance, lang);
+
   if (lang === 'hi') {
-    return `Namaste ${customerName} ji! 🙏\n\n💰 ₹${paymentAmount.toFixed(2)} ka bhugtan mila! ✅\n${bal}\n\nDoodhKhata`;
+    return `Namaste ${customerName} ji! 🙏\n\n✅ ₹${fmt(paymentAmount)} ka bhugtan mila. Shukriya!\n\n${bal}\n\n— DoodhKhata 🥛`;
   }
-  return `Hello ${customerName}!\n\n💰 Payment of ₹${paymentAmount.toFixed(2)} received! ✅\n${bal}\n\nDoodhKhata`;
+  return `Hello ${customerName}! 🙏\n\n✅ Payment of ₹${fmt(paymentAmount)} received. Thank you!\n\n${bal}\n\n— DoodhKhata 🥛`;
 }
 
 export function buildMonthlyMessage(params: {
@@ -74,17 +82,21 @@ export function buildMonthlyMessage(params: {
   const monthName = getMonthName(month, lang);
   const bal = balanceLine(balance, lang);
 
-  const rows = entries
-    .slice()
-    .sort((a, b) => a.date.localeCompare(b.date))
-    .map(e => {
-      const day = String(new Date(e.date + 'T00:00:00').getDate()).padStart(2, '0');
-      return `${day} | ${e.litres}L | ₹${e.amount.toFixed(0)}`;
-    })
-    .join('\n');
+  const sorted = entries.slice().sort((a, b) => a.date.localeCompare(b.date));
 
   if (lang === 'hi') {
-    return `Namaste ${customerName} ji! 🙏\n\n${monthName} ${year} ka hisaab:\n\nTarikh | Litre | Raqam\n${rows}\n\n📊 Mahine ka summary:\n🥛 Kul dudh: ${totalLitres.toFixed(1)} litre\n💰 Kul bana: ₹${totalBilled.toFixed(2)}\n✅ Aapne diye: ₹${totalPaid.toFixed(2)}\n${bal}\n\nDoodhKhata`;
+    const rows = sorted.map(e => {
+      const day = new Date(e.date + 'T00:00:00').getDate();
+      return `  ${String(day).padStart(2)} tarikh — ${e.litres}L = ₹${fmt(e.amount)}`;
+    }).join('\n');
+
+    return `Namaste ${customerName} ji! 🙏\n\n📋 ${monthName} ${year} ka hisaab:\n\n${rows}\n\n———\n🥛 Kul doodh: ${fmt(totalLitres)} litre\n💰 Kul bill: ₹${fmt(totalBilled)}\n✅ Aapne diya: ₹${fmt(totalPaid)}\n${bal}\n\n— DoodhKhata 🥛`;
   }
-  return `Hello ${customerName}!\n\n${monthName} ${year} Statement:\n\nDate | Litres | Amount\n${rows}\n\n📊 Monthly Summary:\n🥛 Total milk: ${totalLitres.toFixed(1)} litres\n💰 Total billed: ₹${totalBilled.toFixed(2)}\n✅ Paid: ₹${totalPaid.toFixed(2)}\n${bal}\n\nDoodhKhata`;
+
+  const rows = sorted.map(e => {
+    const day = new Date(e.date + 'T00:00:00').getDate();
+    return `  ${String(day).padStart(2)}th — ${e.litres}L = ₹${fmt(e.amount)}`;
+  }).join('\n');
+
+  return `Hello ${customerName}! 🙏\n\n📋 ${monthName} ${year} Statement:\n\n${rows}\n\n———\n🥛 Total milk: ${fmt(totalLitres)} litres\n💰 Total bill: ₹${fmt(totalBilled)}\n✅ Paid: ₹${fmt(totalPaid)}\n${bal}\n\n— DoodhKhata 🥛`;
 }

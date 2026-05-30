@@ -91,6 +91,12 @@ export const translations = {
     whatsappDone: 'सब हो गया! 🎉',
     whatsappSending: 'भेज रहे हैं',
     whatsappOf: 'में से',
+    theme: 'थीम',
+    themeLight: 'Light',
+    themeDark: 'Dark',
+    themeSystem: 'System',
+    whatsappAfterBatch: 'WhatsApp भेजें?',
+    whatsappBatchCustomers: 'ग्राहकों को भेजें',
   },
   en: {
     appName: 'DoodhKhata',
@@ -182,6 +188,12 @@ export const translations = {
     whatsappDone: 'All done! 🎉',
     whatsappSending: 'Sending',
     whatsappOf: 'of',
+    theme: 'Theme',
+    themeLight: 'Light',
+    themeDark: 'Dark',
+    themeSystem: 'System',
+    whatsappAfterBatch: 'Send WhatsApp?',
+    whatsappBatchCustomers: 'Send to customers',
   },
 } as const;
 

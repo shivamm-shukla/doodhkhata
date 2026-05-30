@@ -2,6 +2,7 @@ import React from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AppProvider, useApp } from './context/AppContext';
 import { DataProvider } from './context/DataContext';
+import { ThemeProvider } from './context/ThemeContext';
 import { BottomNav } from './components/BottomNav';
 import { Toast } from './components/Toast';
 
@@ -57,12 +58,14 @@ function AppRoutes() {
 
 export default function App() {
   return (
-    <HashRouter>
-      <AppProvider>
-        <DataProvider>
-          <AppRoutes />
-        </DataProvider>
-      </AppProvider>
-    </HashRouter>
+    <ThemeProvider>
+      <HashRouter>
+        <AppProvider>
+          <DataProvider>
+            <AppRoutes />
+          </DataProvider>
+        </AppProvider>
+      </HashRouter>
+    </ThemeProvider>
   );
 }

@@ -21,10 +21,7 @@ export function WhatsAppPrompt({ isOpen, onClose, customerName, phone, message }
   const effectivePhone = phone || manualPhone;
   const hasValidPhone = effectivePhone.replace(/\D/g, '').length === 10;
 
-  const handleSend = () => {
-    openWhatsApp(effectivePhone, message);
-    onClose();
-  };
+  const handleSend = () => { openWhatsApp(effectivePhone, message); onClose(); };
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(message);
@@ -33,62 +30,47 @@ export function WhatsAppPrompt({ isOpen, onClose, customerName, phone, message }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black bg-opacity-50 p-4">
-      <div className="bg-white rounded-2xl w-full max-w-lg p-5 space-y-4">
-        {/* Header */}
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 p-4">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl w-full max-w-lg p-5 space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center shrink-0">
-              <MessageCircle size={20} className="text-green-700" />
+            <div className="w-11 h-11 bg-green-100 dark:bg-green-900/40 rounded-xl flex items-center justify-center shrink-0">
+              <MessageCircle size={22} className="text-green-700 dark:text-green-400" />
             </div>
             <div>
-              <p className="font-bold text-gray-800 text-base">{t('whatsappSendNow')}</p>
-              <p className="text-sm text-gray-500">{customerName}</p>
+              <p className="font-bold text-gray-800 dark:text-white text-base">{t('whatsappSendNow')}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{customerName}</p>
             </div>
           </div>
-          <button onClick={onClose} className="w-8 h-8 flex items-center justify-center text-gray-400 active:text-gray-600">
+          <button onClick={onClose} className="w-9 h-9 flex items-center justify-center text-gray-400 dark:text-gray-500 active:text-gray-600">
             <X size={20} />
           </button>
         </div>
 
-        {/* Phone input if not saved */}
         {!phone && (
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">{t('whatsappEnterNumber')}</label>
-            <input
-              type="tel"
-              inputMode="numeric"
-              value={manualPhone}
+            <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1.5">{t('whatsappEnterNumber')}</label>
+            <input type="tel" inputMode="numeric" value={manualPhone}
               onChange={e => setManualPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
               placeholder="10 digit number"
-              className="w-full border border-gray-300 rounded-xl px-3 py-3 text-base focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
+              className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-xl px-3 py-3.5 text-base focus:outline-none focus:ring-2 focus:ring-green-500" />
           </div>
         )}
 
-        {/* Action buttons */}
         <div className="flex gap-3">
           {hasValidPhone ? (
-            <button
-              onClick={handleSend}
-              className="flex-1 py-4 rounded-xl bg-green-700 text-white text-base font-semibold flex items-center justify-center gap-2 active:bg-green-800"
-            >
-              <MessageCircle size={18} />
-              {t('whatsappYes')}
+            <button onClick={handleSend}
+              className="flex-1 py-4 rounded-xl bg-green-700 text-white text-base font-bold flex items-center justify-center gap-2 active:bg-green-800">
+              <MessageCircle size={18} />{t('whatsappYes')}
             </button>
           ) : (
-            <button
-              onClick={handleCopy}
-              className="flex-1 py-4 rounded-xl bg-green-700 text-white text-base font-semibold flex items-center justify-center gap-2 active:bg-green-800"
-            >
-              <Copy size={18} />
-              {copied ? t('whatsappSent') : t('whatsappCopyMessage')}
+            <button onClick={handleCopy}
+              className="flex-1 py-4 rounded-xl bg-green-700 text-white text-base font-bold flex items-center justify-center gap-2 active:bg-green-800">
+              <Copy size={18} />{copied ? t('whatsappSent') : t('whatsappCopyMessage')}
             </button>
           )}
-          <button
-            onClick={onClose}
-            className="flex-1 py-4 rounded-xl border border-gray-300 text-gray-700 text-base font-semibold active:bg-gray-50"
-          >
+          <button onClick={onClose}
+            className="flex-1 py-4 rounded-xl border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 text-base font-semibold active:bg-gray-50 dark:active:bg-gray-800">
             {t('whatsappLater')}
           </button>
         </div>
