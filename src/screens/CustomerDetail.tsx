@@ -17,7 +17,7 @@ export function CustomerDetail() {
   const { t, lang } = useLanguage();
   const navigate = useNavigate();
   const { showToast, state: appState } = useApp();
-  const { state, loadCustomerEntries, createDeliveryEntry, removeDeliveryEntry, createPaymentEntry, removePaymentEntry, removeCustomer, editCustomer } = useData();
+  const { state, loadCustomers, loadCustomerEntries, createDeliveryEntry, removeDeliveryEntry, createPaymentEntry, removePaymentEntry, removeCustomer, editCustomer } = useData();
 
   const [showDeliverySheet, setShowDeliverySheet] = useState(false);
   const [showPaymentSheet, setShowPaymentSheet] = useState(false);
@@ -32,7 +32,12 @@ export function CustomerDetail() {
   const payments = (id ? state.customerPayments[id] : []) ?? [];
   const { balance, totalDelivery, totalPaid } = useCustomerBalance(id ?? '');
 
-  useEffect(() => { if (id) loadCustomerEntries(id); }, [id]);
+  useEffect(() => {
+    if (id) {
+      loadCustomerEntries(id);
+      if (state.customers.length === 0) loadCustomers();
+    }
+  }, [id]);
 
   if (!customer) {
     return <div className="min-h-screen flex items-center justify-center"><p className="text-gray-500">Customer not found</p></div>;

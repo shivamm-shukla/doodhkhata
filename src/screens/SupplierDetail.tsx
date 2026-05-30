@@ -14,7 +14,7 @@ export function SupplierDetail() {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const { showToast } = useApp();
-  const { state, loadSupplierEntries, createDeliveryEntry, removeDeliveryEntry, createPaymentEntry, removePaymentEntry, removeSupplier, editSupplier } = useData();
+  const { state, loadSuppliers, loadSupplierEntries, createDeliveryEntry, removeDeliveryEntry, createPaymentEntry, removePaymentEntry, removeSupplier, editSupplier } = useData();
 
   const [showDeliverySheet, setShowDeliverySheet] = useState(false);
   const [showPaymentSheet, setShowPaymentSheet] = useState(false);
@@ -29,7 +29,10 @@ export function SupplierDetail() {
   const { balance, totalPurchased, totalPaid } = useSupplierBalance(id ?? '');
 
   useEffect(() => {
-    if (id) loadSupplierEntries(id);
+    if (id) {
+      loadSupplierEntries(id);
+      if (state.suppliers.length === 0) loadSuppliers();
+    }
   }, [id]);
 
   if (!supplier) {
