@@ -8,18 +8,7 @@ A mobile-first offline Progressive Web App for small milk sellers to track daily
 
 ## Screenshots
 
-<p align="center">
-  <img src="screenshots/home.png" width="180" alt="Home Dashboard" />
-  <img src="screenshots/home-dark.png" width="180" alt="Home Dark Mode" />
-  <img src="screenshots/customers.png" width="180" alt="Customers List" />
-  <img src="screenshots/customer-detail.png" width="180" alt="Customer Detail" />
-</p>
-<p align="center">
-  <img src="screenshots/quick-entry.png" width="180" alt="Quick Entry" />
-  <img src="screenshots/batch-entry.png" width="180" alt="Batch Entry" />
-  <img src="screenshots/whatsapp-bulk.png" width="180" alt="WhatsApp Bulk Send" />
-  <img src="screenshots/settings.png" width="180" alt="Settings" />
-</p>
+See [`screenshots/`](screenshots/) for app screen previews.
 
 ---
 
